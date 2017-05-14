@@ -28,7 +28,7 @@ window.renderFretboard = function(options) {
     var ctx = canvas.getContext("2d");
 
     // Render fret highlight.
-    for (var highlight of options.fretHighlight) {
+    for (var highlight of (options.fretHighlight || [])) {
         for (var fret = highlight.from; fret <= highlight.to; ++fret) {
             if (fret <= 0 || fret > N) {
                 console.error('Fret highlight out of bounds: ' + JSON.stringify(highlight));
@@ -67,6 +67,7 @@ window.renderFretboard = function(options) {
         ctx.stroke();
     }
 
+    // Render circles
     ctx.beginPath();
     var SINGLE_CIRCLES = [3, 5, 7, 9, 15, 17, 19, 21];
     for (var fretNumber of SINGLE_CIRCLES) {
@@ -96,7 +97,7 @@ window.renderFretboard = function(options) {
             console.error('note outside fretboard: ' + note.text + `[${note.fret}:${note.string}]`);
             continue;
         }
-        renderNote(note.fret, note.string, note.text);
+        renderNote(note.fret, note.string, note.color, note.text);
     }
 
     return canvas;
@@ -109,22 +110,22 @@ window.renderFretboard = function(options) {
         return STRINGS > 1 ? H / (STRINGS - 1) * n : H / 2;
     }
 
-    function renderNote(fret, string, text) {
+    function renderNote(fret, string, color, text) {
         --string;
         ctx.beginPath();
         var x = fret === 0 ? 0 : (fretX(fret - 1) + fretX(fret)) / 2;
         var y = stringY(string);
-        var R = STRINGS > 1 ? H / (STRINGS - 1) * 0.4 : H / 2;
+        var R = STRINGS > 1 ? H / (STRINGS - 1) * 0.35 : H / 2;
         ctx.moveTo(x, y);
         ctx.arc(x, y, R, 0, 360, false);
-        ctx.fillStyle = '#555';
+        ctx.fillStyle = color || '#555';
         ctx.strokeStyle = 'white';
-        ctx.lineWidth = 5;
+        ctx.lineWidth = 2;
         ctx.stroke();
         ctx.fill();
 
         ctx.beginPath();
-        ctx.font = '16px arial';
+        ctx.font = '15px arial';
         ctx.fontWeight = 'bold';
         ctx.lineWidth = 1;
         ctx.textBaseline = 'middle';
