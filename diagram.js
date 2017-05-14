@@ -26,6 +26,20 @@ window.renderFretboard = function(options) {
     var canvas = createHiDPICanvas(W + PADDING, H + PADDING);
     canvas.getContext("2d").translate(PADDING / 2, PADDING / 2);
     var ctx = canvas.getContext("2d");
+
+    // Render fret highlight.
+    for (var highlight of options.fretHighlight) {
+        for (var fret = highlight.from; fret <= highlight.to; ++fret) {
+            if (fret <= 0 || fret > N) {
+                console.error('Fret highlight out of bounds: ' + JSON.stringify(highlight));
+                continue;
+            }
+            ctx.fillStyle = highlight.color;
+            ctx.fillRect(fretX(fret - 1), -PADDING/2, fretX(fret) - fretX(fret - 1), H + PADDING);
+        }
+    }
+
+    // Render fretboard.
     ctx.beginPath();
     for (var i = 0; i < STRINGS; ++i) {
         var y = stringY(i);
@@ -84,6 +98,7 @@ window.renderFretboard = function(options) {
         }
         renderNote(note.fret, note.string, note.text);
     }
+
     return canvas;
 
     function fretX(n) {

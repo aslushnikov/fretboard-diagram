@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
-    var fret = 1;
+    var fret = 2;
     var notes = [
+        {fret: fret + 0, string: 1, text: 'B'},
         {fret: fret + 1, string: 1, text: 'C'},
         {fret: fret + 3, string: 1, text: 'D'},
         {fret: fret + 5, string: 1, text: 'E'},
@@ -18,14 +19,18 @@ document.addEventListener('DOMContentLoaded', function() {
         */
     ];
     var fretboard = renderFretboard({
-        N: 16, // fret count
+        N: 17, // fret count
         strings: 1, // string count
         a1: 50, // first fret width in pixels
         d: 0, // fret size decrease. Default guitar has a1 / 24.
         height: 30, // fretboard height in pixels
         padding: 50, // canvas padding
         hideNut: true, // hide guitar nut
-        notes: notes
+        notes: notes,
+        fretHighlight: [
+            { from: 3, to: 7, color: '#fbf' },
+            { from: 8, to: 14, color: '#bff' },
+        ]
     });
     document.body.appendChild(fretboard);
 });
